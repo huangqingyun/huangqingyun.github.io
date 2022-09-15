@@ -234,11 +234,11 @@ content<span class="token punctuation">.</span>Headers<span class="token punctua
 response<span class="token punctuation">.</span><span class="token function">EnsureSuccessStatusCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token class-name"><span class="token keyword">string</span></span> responseBody <span class="token operator">=</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span>Content<span class="token punctuation">.</span><span class="token function">ReadAsStringAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>在使用该类型进行自定义请求时，特别容易<strong>忘记</strong>将请求的数据<strong>进行URL编码</strong>。如果忘记URL解码情况下,还对请求数据进行<code>Base64</code>编码进行请求，服务端在收到请求多数据进行进行<code>URL</code>解码时，会把<code>Base64</code>中 <code>+</code> 解码为空格。导致Base64解码失败。</p>
+<p>在使用该类型进行自定义请求时，特别容易<strong>忘记</strong>将请求的数据<strong>进行URL编码</strong>。如果忘记URL解码情况下,还对请求数据<code>Base64</code>编码进行请求，服务端在收到请求多数据再进行<code>URL</code>解码时，会把<code>Base64</code>中 <code>+</code> 解码为空格。导致<code>Base64</code>解码失败。</p>
 <blockquote>
 <p>URL编码(URL encoding)适用于统一资源标识符(URI)的编码，也用于为”application&#x2F;x-www-form-urlencoded”<code>MIME</code>数据.</p>
 </blockquote>
-<h4 id="multipart-x2F-form-data"><a href="#multipart-x2F-form-data" class="headerlink" title="multipart&#x2F;form-data"></a><strong>multipart&#x2F;form-data</strong></h4><p>在文件上传场景，是最常见的<code>POST</code>提交数据的方式了。浏览器的原生<code>form</code>表单，设置<code>enctype</code>属性<code>multipart/form-data</code>，那么最终就会以<code>multipart/form-data</code>方式提交数据。类似于下面这样请求报文（无关的请求头在本文中都省略掉了）：</p>
+<h4 id="multipart-x2F-form-data"><a href="#multipart-x2F-form-data" class="headerlink" title="multipart&#x2F;form-data"></a><strong>multipart&#x2F;form-data</strong></h4><p>在文件上传场景，是最常见的<code>POST</code>提交数据的方式了。浏览器的原生<code>form</code>表单，设置<code>enctype</code>属性值为<code>multipart/form-data</code>，那么最终就会以<code>multipart/form-data</code>方式提交数据。类似于下面这样请求报文（无关的请求头在本文中都省略掉了）：</p>
 <pre class="line-numbers language-http" data-language="http"><code class="language-http"><span class="token request-line"><span class="token method property">POST</span> <span class="token request-target url">http://www.example.com</span> <span class="token http-version property">HTTP/1.1</span></span>
 <span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span><span class="token header-value">multipart/form-data; boundary=----WebKitFormBoundaryrGKCBY7qhFd3TrwA</span></span>
  
@@ -354,17 +354,18 @@ response<span class="token punctuation">.</span><span class="token function">Ens
     <span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>从源码中可知，在解析<code>HttpRequestMessage</code>时，其属性<code>RequestUri</code>不为空且是绝对路径时，会覆盖<code>HttpClient</code>的<code>BaseAddress</code>属性值。如果<code>HttpRequestMessage</code>时，其属性<code>RequestUri</code>不为空且是相对路径时，会将<code>HttpClient</code>的<code>BaseAddress</code>属性值和<code>HttpRequestMessage</code>的属性<code>RequestUri</code>值进行合并。所以要特别注意<code>Uri</code>合并规则。</p>
+<p>从源码中可知，在解析<code>HttpRequestMessage</code>时，其属性<code>RequestUri</code>不为空且是绝对路径时，会覆盖<code>HttpClient</code>的<code>BaseAddress</code>属性值。如果<code>HttpRequestMessage</code>的属性<code>RequestUri</code>不为空且是相对路径时，会将<code>HttpClient</code>的<code>BaseAddress</code>属性值和<code>HttpRequestMessage</code>的属性<code>RequestUri</code>值进行合并。所以要特别注意<code>Uri</code>合并规则。</p>
 <p><strong>简单总结<code>Uri</code>网络路径的合并规则</strong>：</p>
+<p><code>basePart</code>指代<code>HttpClient</code>的<code>BaseAddress</code>属性值；<code>relativePart</code>指代<code>HttpRequestMessage</code>的属性<code>RequestUri</code>。</p>
 <ul>
 <li><code>relativePart</code>是以<code>//</code>或<code>\</code>开始的，为绝对路径，否则为相对路径。</li>
 </ul>
 <ol>
-<li>绝对路径，将<code>basePart</code>端口号后拼接<code>relativePart</code></li>
-<li>相对路径，将<code>basePart</code>直接拼接<code>relativePart</code></li>
+<li>绝对路径，将<code>basePart</code>端口号及其之前的部分和<code>relativePart</code>拼接</li>
+<li>相对路径，将<code>basePart</code>直接和<code>relativePart</code>拼接</li>
 </ol>
 <ul>
-<li><code>basePart</code>是以<code>\</code>结尾的，拼接时将取<code>basePart</code>最后的一个<code>\</code>之前的部分和<code>relativePart</code>直接拼接，若没有<code>\</code>结尾则取端口号后拼接<code>relativePart</code>。</li>
+<li><code>basePart</code>是以<code>\</code>结尾的，拼接时将取<code>basePart</code>最后的一个<code>\</code>之前的部分和<code>relativePart</code>直接拼接，若没有<code>\</code>结尾则取端口号及其之前的部分和<code>relativePart</code>拼接。</li>
 </ul>
 <p>验证规则代码：</p>
 <pre class="line-numbers language-csharp" data-language="csharp"><code class="language-csharp"><span class="token class-name"><span class="token keyword">var</span></span> baseUrl <span class="token operator">=</span> <span class="token string">"https://user:password@www.contoso.com:80"</span><span class="token punctuation">;</span>
