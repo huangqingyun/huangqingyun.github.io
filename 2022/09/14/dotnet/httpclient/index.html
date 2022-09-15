@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="zh-CN" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/img/Kaze.png">
+  <title>学习笔记</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+  
+  
+  <link href="/js/lib/prism/prism.min.css" rel="stylesheet" data-prism="prism">
+  
+  
+  
+<link rel="stylesheet" href="/js/lib/prism/prism-line-numbers.min.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/img/Kaze.png">
+      
+      <span class="navbar-logo-dsc">学习笔记</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">首页 </a>
+    
+    <a href="/archives" class="navbar-menu-item">归档 </a>
+    
+    <a href="/tags" class="navbar-menu-item">标签 </a>
+    
+    <a href="/categories" class="navbar-menu-item">分类 </a>
+    
+    <a href="/about/me" class="navbar-menu-item">关于 </a>
+    
+    <a href="/links" class="navbar-menu-item">友链 </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      HttpClient
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2022-09-14T08:17:49.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2022-09-14</span>
+    </time>
+    
+    
+    <span class="dot"></span>
+    <span>2.7k 字</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/net/" class="post-meta-link">.net</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/C/" class="post-meta-link">C#</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/HttpClient/" class="post-meta-link">HttpClient</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <h2 id="HttpClient"><a href="#HttpClient" class="headerlink" title="HttpClient"></a>HttpClient</h2><p>用于发送 HTTP 请求并从 URI 标识的资源接收 HTTP 响应。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://source.dot.net/#System.Net.Http/System/Net/Http/HttpClient.cs">官方源码地址</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.net.http.httpclient?view=net-6.0">官方文档</a></p>
+</blockquote>
+<h3 id="使用准则"><a href="#使用准则" class="headerlink" title="使用准则"></a>使用准则</h3><p><code>System.Net.Http.HttpClient</code>类用于发送<code>HTTP</code>请求以及从<code>URI</code>所标识的资源接收<code>HTTP</code>响应。<code>HttpClient</code>实例是应用于该实例执行的所有请求的设置集合，每个实例使用自身的连接池，该池将其请求与其他请求隔离开来。 从<code>.NET Core 2.1</code>开始，<code>SocketsHttpHandler</code>类提供实现，使行为在所有平台上保持一致。</p>
+<p><strong>注意事项</strong>：</p>
+<ul>
+<li><code>HttpClient</code>仅在创建连接时解析<code>DNS</code>条目</li>
+<li>若要解决此问题，可以通过设置<code>PooledConnectionLifetime</code>属性来限制连接的生存期，以便在替换连接时要求执行<code>DNS</code>查找</li>
+</ul>
+ <pre class="line-numbers language-csharp" data-language="csharp"><code class="language-csharp"><span class="token class-name"><span class="token keyword">var</span></span> handler <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">SocketsHttpHandler</span>
+<span class="token punctuation">&#123;</span>
+    PooledConnectionLifetime <span class="token operator">=</span> TimeSpan<span class="token punctuation">.</span><span class="token function">FromMinutes</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span> <span class="token comment">// Recreate every 15 minutes</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">var</span></span> client <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">HttpClient</span><span class="token punctuation">(</span>handler<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/fundamentals/networking/http/httpclient-guidelines">详细请看官方说明</a></p>
+</blockquote>
+<h3 id="Get请求"><a href="#Get请求" class="headerlink" title="Get请求"></a>Get请求</h3><pre class="line-numbers language-csharp" data-language="csharp"><code class="language-csharp"><span class="token class-name"><span class="token keyword">var</span></span> response <span class="token operator">=</span> <span class="token keyword">await</span> client<span class="token punctuation">.</span><span class="token function">GetAsync</span><span class="token punctuation">(</span><span class="token string">"http://www.contoso.com/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+response<span class="token punctuation">.</span><span class="token function">EnsureSuccessStatusCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">string</span></span> responseBody <span class="token operator">=</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span>Content<span class="token punctuation">.</span><span class="token function">ReadAsStringAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="Post请求"><a href="#Post请求" class="headerlink" title="Post请求"></a>Post请求</h3><p><code>Post</code>请求涉及到多种请求体媒体类型（<code>MIME</code>）,每种<code>MIME</code>类型都有对应的<code>Content-Type</code>。所以需要针对不同的<code>Content-Type</code>进行说明。</p>
+<h4 id="application-x2F-x-www-form-urlencoded"><a href="#application-x2F-x-www-form-urlencoded" class="headerlink" title="application&#x2F;x-www-form-urlencoded"></a><strong>application&#x2F;x-www-form-urlencoded</strong></h4><p>这应该是最常见的<code>POST</code>提交数据的方式了。浏览器的原生<code>form</code>表单，如果不设置<code>enctype</code>属性，那么最终就会以<code>application/x-www-form-urlencoded</code>方式提交数据。类似于下面这样请求报文（无关的请求头在本文中都省略掉了）：</p>
+<pre class="line-numbers language-http" data-language="http"><code class="language-http"><span class="token request-line"><span class="token method property">POST</span> <span class="token request-target url">http://www.example.com</span> <span class="token http-version property">HTTP/1.1</span></span>
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">application/x-www-form-urlencoded;charset=utf-8</span></span>
+ 
+title=test&amp;sub%5B%5D=1&amp;sub%5B%5D=2&amp;sub%5B%5D=3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在.net里对应的封装<code>application/x-www-form-urlencoded</code>请求内容类型的类为：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.net.http.formurlencodedcontent?view=net-6.0">FormUrlEncodedContent</a>.</p>
+<h5 id="FormUrlEncodedContent示例"><a href="#FormUrlEncodedContent示例" class="headerlink" title="FormUrlEncodedContent示例"></a><code>FormUrlEncodedContent</code>示例</h5><pre class="line-numbers language-csharp" data-language="csharp"><code class="language-csharp"><span class="token class-name"><span class="token keyword">var</span></span> param <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">Dictionary<span class="token punctuation">&lt;</span><span class="token keyword">string</span><span class="token punctuation">,</span> <span class="token keyword">string</span><span class="token punctuation">></span></span> 
+<span class="token punctuation">&#123;</span>
+    <span class="token punctuation">&#123;</span><span class="token string">"Id"</span><span class="token punctuation">,</span> <span class="token string">"10"</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#123;</span><span class="token string">"Name"</span><span class="token punctuation">,</span> <span class="token string">"Tom Post"</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#123;</span><span class="token string">"Age"</span><span class="token punctuation">,</span> <span class="token string">"10"</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#123;</span><span class="token string">"Birthday"</span><span class="token punctuation">,</span> DateTime<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">ToString</span><span class="token punctuation">(</span><span class="token string">"yyyyMMdd"</span><span class="token punctuation">)</span><span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token class-name"><span class="token keyword">var</span></span> content <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">FormUrlEncodedContent</span><span class="token punctuation">(</span>param<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">var</span></span> response <span class="token operator">=</span> <span class="token keyword">await</span> client<span class="token punctuation">.</span><span class="token function">PostAsync</span><span class="token punctuation">(</span><span class="token string">"http://www.contoso.com/"</span><span class="token punctuation">,</span>content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+response<span class="token punctuation">.</span><span class="token function">EnsureSuccessStatusCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">string</span></span> responseBody <span class="token operator">=</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span>Content<span class="token punctuation">.</span><span class="token function">ReadAsStringAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 自定义请求,特别要注意URL编码</span>
+<span class="token class-name"><span class="token keyword">var</span></span> requestStr <span class="token operator">=</span> UrlEncoder<span class="token punctuation">.</span>Default<span class="token punctuation">.</span><span class="token function">Encode</span><span class="token punctuation">(</span><span class="token string">"Id=10&amp;Name=Tom Post&amp;Age=10&amp;Birthday=20080520"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token class-name"><span class="token keyword">var</span></span> content <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">StringContent</span><span class="token punctuation">(</span>requestStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">var</span></span> mediaType <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">MediaTypeHeaderValue</span><span class="token punctuation">(</span><span class="token string">"application/x-www-form-urlencoded"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 添加内容头类型</span>
+mediaType<span class="token punctuation">.</span>CharSet <span class="token operator">=</span> <span class="token string">"utf-8"</span><span class="token punctuation">;</span> <span class="token comment">// 设置字符编码类型，和第一行对应</span>
+content<span class="token punctuation">.</span>Headers<span class="token punctuation">.</span>ContentType <span class="token operator">=</span> mediaType<span class="token punctuation">;</span> <span class="token comment">// 添加内容头类型</span>
+<span class="token class-name"><span class="token keyword">var</span></span> response <span class="token operator">=</span> <span class="token keyword">await</span> client<span class="token punctuation">.</span><span class="token function">PostAsync</span><span class="token punctuation">(</span><span class="token string">"http://www.contoso.com/"</span><span class="token punctuation">,</span>content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+response<span class="token punctuation">.</span><span class="token function">EnsureSuccessStatusCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">string</span></span> responseBody <span class="token operator">=</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span>Content<span class="token punctuation">.</span><span class="token function">ReadAsStringAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在使用该类型进行自定义请求时，特别容易<strong>忘记</strong>将请求的数据<strong>进行URL编码</strong>。如果忘记URL解码情况下,还对请求数据进行<code>Base64</code>编码进行请求，服务端在收到请求多数据进行进行<code>URL</code>解码时，会把<code>Base64</code>中 <code>+</code> 解码为空格。导致Base64解码失败。</p>
+<blockquote>
+<p>URL编码(URL encoding)适用于统一资源标识符(URI)的编码，也用于为”application&#x2F;x-www-form-urlencoded”<code>MIME</code>数据.</p>
+</blockquote>
+<h4 id="multipart-x2F-form-data"><a href="#multipart-x2F-form-data" class="headerlink" title="multipart&#x2F;form-data"></a><strong>multipart&#x2F;form-data</strong></h4><p>在文件上传场景，是最常见的<code>POST</code>提交数据的方式了。浏览器的原生<code>form</code>表单，设置<code>enctype</code>属性<code>multipart/form-data</code>，那么最终就会以<code>multipart/form-data</code>方式提交数据。类似于下面这样请求报文（无关的请求头在本文中都省略掉了）：</p>
+<pre class="line-numbers language-http" data-language="http"><code class="language-http"><span class="token request-line"><span class="token method property">POST</span> <span class="token request-target url">http://www.example.com</span> <span class="token http-version property">HTTP/1.1</span></span>
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span><span class="token header-value">multipart/form-data; boundary=----WebKitFormBoundaryrGKCBY7qhFd3TrwA</span></span>
+ 
+------WebKitFormBoundaryrGKCBY7qhFd3TrwA
+<span class="token header"><span class="token header-name keyword">Content-Disposition</span><span class="token punctuation">:</span> <span class="token header-value">form-data; name="text"</span></span>
+ 
+title
+------WebKitFormBoundaryrGKCBY7qhFd3TrwA
+<span class="token header"><span class="token header-name keyword">Content-Disposition</span><span class="token punctuation">:</span> <span class="token header-value">form-data; name="file"; filename="chrome.png"</span></span>
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">image/png</span></span>
+ 
+PNG ... content of chrome.png ...
+------WebKitFormBoundaryrGKCBY7qhFd3TrwA--<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这个例子稍微复杂点。首先生成了一个<code>boundary</code>用于分割不同的字段，为了避免与正文内容重复，<code>boundary</code>很长很复杂。然后 <code>Content-Type</code> 里指明了数据是以<code>mutipart/form-data</code>来编码，本次请求的<code>boundary</code>是什么内容。消息主体里按照字段个数又分为多个结构类似的部分，每部分都是以 <code>--boundary</code> 开始，紧接着内容描述信息，然后是回车，最后是字段具体内容（文本或二进制）。如果传输的是文件，还要包含文件名和文件类型信息。消息主体最后以<code>--boundary--</code>标示结束。</p>
+<blockquote>
+<p>关于 <code>mutipart/form-data</code> 的详细定义，请前往 <a target="_blank" rel="noopener" href="http://www.ietf.org/rfc/rfc1867.txt">rfc1867</a> 查看。</p>
+</blockquote>
+<p>在.net里对应的封装<code>mutipart/form-data</code>请求内容类型的类为：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.net.http.multipartformdatacontent?view=net-6.0">HttpMultipartFormDataContent</a>.</p>
+<h5 id="HttpMultipartFormDataContent示例"><a href="#HttpMultipartFormDataContent示例" class="headerlink" title="HttpMultipartFormDataContent示例"></a><code>HttpMultipartFormDataContent</code>示例</h5><pre class="line-numbers language-csharp" data-language="csharp"><code class="language-csharp"><span class="token keyword">using</span> <span class="token class-name"><span class="token keyword">var</span></span> content <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">MultipartFormDataContent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+     <span class="token punctuation">&#123;</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">StringContent</span><span class="token punctuation">(</span><span class="token string">"12"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token string">"Id"</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+     <span class="token punctuation">&#123;</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">StringContent</span><span class="token punctuation">(</span><span class="token string">"zhangs"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token string">"Name"</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">var</span></span> byteArrayContent <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">ByteArrayContent</span><span class="token punctuation">(</span>File<span class="token punctuation">.</span><span class="token function">ReadAllBytes</span><span class="token punctuation">(</span><span class="token string">"your file path"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+byteArrayContent<span class="token punctuation">.</span>Headers<span class="token punctuation">.</span>ContentType <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">MediaTypeHeaderValue</span><span class="token punctuation">(</span><span class="token string">"audio/wav"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// 这里为文件MIME类型</span>
+content<span class="token punctuation">.</span><span class="token function">Add</span><span class="token punctuation">(</span>byteArrayContent<span class="token punctuation">,</span> Constants<span class="token punctuation">.</span>DefaultFormFields<span class="token punctuation">.</span>File<span class="token punctuation">,</span> filename<span class="token punctuation">)</span><span class="token punctuation">;</span>
+content<span class="token punctuation">.</span><span class="token function">Add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token constructor-invocation class-name">StringContent</span><span class="token punctuation">(</span><span class="token string">"false"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> Constants<span class="token punctuation">.</span>DefaultFormFields<span class="token punctuation">.</span>EnableWords<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token class-name">HttpResponseMessage</span> response <span class="token operator">=</span> <span class="token keyword">await</span> _client<span class="token punctuation">.</span><span class="token function">PostAsync</span><span class="token punctuation">(</span><span class="token string">"http://www.samples.com/"</span><span class="token punctuation">,</span> content<span class="token punctuation">,</span> cancellationToken<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ConfigureAwait</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+response<span class="token punctuation">.</span><span class="token function">EnsureSuccessStatusCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">string</span></span> responseBody <span class="token operator">=</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span>Content<span class="token punctuation">.</span><span class="token function">ReadAsStringAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="application-x2F-json"><a href="#application-x2F-json" class="headerlink" title="application&#x2F;json"></a><strong>application&#x2F;json</strong></h4><p><code>RESTful</code>的接口最常用的提交数据的方式了。<code>application/json</code>方式提交数据。类似于下面这样请求报文（无关的请求头在本文中都省略掉了）：</p>
+<pre class="line-numbers language-http" data-language="http"><code class="language-http"><span class="token request-line"><span class="token method property">POST</span> <span class="token request-target url">http://www.example.com</span> <span class="token http-version property">HTTP/1.1</span></span>
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">application/json;charset=utf-8</span></span>
+ 
+&#123;"title":"test","sub":[1,2,3]&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在.net里对应的封装<code>application/json</code>请求内容类型的类为：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.net.http.json.jsoncontent?view=net-6.0">JsonContent</a>.</p>
+<h5 id="JsonContent示例"><a href="#JsonContent示例" class="headerlink" title="JsonContent示例"></a><code>JsonContent</code>示例</h5><pre class="line-numbers language-csharp" data-language="csharp"><code class="language-csharp"><span class="token class-name"><span class="token keyword">var</span></span> user <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">User</span> <span class="token punctuation">&#123;</span> Name <span class="token operator">=</span> <span class="token string">"Steve Gordon"</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token comment">// 方式1</span>
+<span class="token class-name"><span class="token keyword">var</span></span> content <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">StringContent</span><span class="token punctuation">(</span>JsonSerializer<span class="token punctuation">.</span><span class="token function">Serialize</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+content<span class="token punctuation">.</span>Headers<span class="token punctuation">.</span>ContentType <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">MediaTypeHeaderValue</span><span class="token punctuation">(</span><span class="token string">"application/json"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">var</span></span> response <span class="token operator">=</span> <span class="token keyword">await</span> client<span class="token punctuation">.</span><span class="token function">PostAsync</span><span class="token punctuation">(</span><span class="token string">"http://www.samples.com/"</span><span class="token punctuation">,</span> content<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ConfigureAwait</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+response<span class="token punctuation">.</span><span class="token function">EnsureSuccessStatusCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 方式2</span>
+<span class="token class-name"><span class="token keyword">var</span></span> postRequest <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">HttpRequestMessage</span><span class="token punctuation">(</span>HttpMethod<span class="token punctuation">.</span>Post<span class="token punctuation">,</span> uri<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    Content <span class="token operator">=</span> JsonContent<span class="token punctuation">.</span><span class="token function">Create</span><span class="token punctuation">(</span>json<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">var</span></span> response <span class="token operator">=</span> <span class="token keyword">await</span> httpClient<span class="token punctuation">.</span><span class="token function">SendAsync</span><span class="token punctuation">(</span>postRequest<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ConfigureAwait</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+response<span class="token punctuation">.</span><span class="token function">EnsureSuccessStatusCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 方式3</span>
+<span class="token class-name"><span class="token keyword">var</span></span> response <span class="token operator">=</span> <span class="token keyword">await</span> httpClient<span class="token punctuation">.</span><span class="token function">PostAsJsonAsync</span><span class="token punctuation">(</span>uri<span class="token punctuation">,</span> json<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ConfigureAwait</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+response<span class="token punctuation">.</span><span class="token function">EnsureSuccessStatusCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="text-x2F-xml"><a href="#text-x2F-xml" class="headerlink" title="text&#x2F;xml"></a><strong>text&#x2F;xml</strong></h4><p><code>XML</code>作为编码方式的远程调用规范。典型的<code>XML-RPC</code>请求是这样的：</p>
+<pre class="line-numbers language-http" data-language="http"><code class="language-http"><span class="token request-line"><span class="token method property">POST</span> <span class="token request-target url">http://www.example.com</span> <span class="token http-version property">HTTP/1.1</span></span>
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">text/xml</span></span>
+ 
+&lt;!--?xml version="1.0"?-->
+&lt;methodcall>
+&lt;methodname>examples.getStateName&lt;/methodname>
+  &lt;params>
+    &lt;param>
+      &lt;value>&lt;i4>41&lt;/i4>&lt;/value>
+ 	&lt;/param>
+  &lt;/params>
+&lt;/methodcall><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这个现在不是很常用，至少目前我还没遇到过这样的。所以不再进行说明。</p>
+<h3 id="Url拼接注意事项"><a href="#Url拼接注意事项" class="headerlink" title="Url拼接注意事项"></a><strong>Url</strong>拼接注意事项</h3><p>在使用命名客户端等指定<code>BaseAddress</code>属性的情况下，特别要注意<code>Path</code>是相对路径还是绝对路径。</p>
+<p>以下是<code>HttpClient</code>解析请求信息源码</p>
+<pre class="line-numbers language-csharp" data-language="csharp"><code class="language-csharp"><span class="token keyword">private</span> <span class="token return-type class-name"><span class="token keyword">void</span></span> <span class="token function">PrepareRequestMessage</span><span class="token punctuation">(</span><span class="token class-name">HttpRequestMessage</span> request<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token class-name">Uri<span class="token punctuation">?</span></span> requestUri <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span>RequestUri <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>_baseAddress <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">InvalidOperationException</span><span class="token punctuation">(</span>SR<span class="token punctuation">.</span>net_http_client_invalid_requesturi<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>request<span class="token punctuation">.</span>RequestUri <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        requestUri <span class="token operator">=</span> _baseAddress<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">else</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token comment">// If the request Uri is an absolute Uri, just use it. Otherwise try to combine it with the base Uri.</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>request<span class="token punctuation">.</span>RequestUri<span class="token punctuation">.</span>IsAbsoluteUri<span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>_baseAddress <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">InvalidOperationException</span><span class="token punctuation">(</span>SR<span class="token punctuation">.</span>net_http_client_invalid_requesturi<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token keyword">else</span>
+            <span class="token punctuation">&#123;</span>
+                requestUri <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">Uri</span><span class="token punctuation">(</span>_baseAddress<span class="token punctuation">,</span> request<span class="token punctuation">.</span>RequestUri<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// We modified the original request Uri. Assign the new Uri to the request message.</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>requestUri <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        request<span class="token punctuation">.</span>RequestUri <span class="token operator">=</span> requestUri<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// Add default headers</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>_defaultRequestHeaders <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        request<span class="token punctuation">.</span>Headers<span class="token punctuation">.</span><span class="token function">AddHeaders</span><span class="token punctuation">(</span>_defaultRequestHeaders<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>从源码中可知，在解析<code>HttpRequestMessage</code>时，其属性<code>RequestUri</code>不为空且是绝对路径时，会覆盖<code>HttpClient</code>的<code>BaseAddress</code>属性值。如果<code>HttpRequestMessage</code>时，其属性<code>RequestUri</code>不为空且是相对路径时，会将<code>HttpClient</code>的<code>BaseAddress</code>属性值和<code>HttpRequestMessage</code>的属性<code>RequestUri</code>值进行合并。所以要特别注意<code>Uri</code>合并规则。</p>
+<p><strong>简单总结<code>Uri</code>网络路径的合并规则</strong>：</p>
+<ul>
+<li><code>relativePart</code>是以<code>//</code>或<code>\</code>开始的，为绝对路径，否则为相对路径。</li>
+</ul>
+<ol>
+<li>绝对路径，将<code>basePart</code>端口号后拼接<code>relativePart</code></li>
+<li>相对路径，将<code>basePart</code>直接拼接<code>relativePart</code></li>
+</ol>
+<ul>
+<li><code>basePart</code>是以<code>\</code>结尾的，拼接时将取<code>basePart</code>最后的一个<code>\</code>之前的部分和<code>relativePart</code>直接拼接，若没有<code>\</code>结尾则取端口号后拼接<code>relativePart</code>。</li>
+</ul>
+<p>验证规则代码：</p>
+<pre class="line-numbers language-csharp" data-language="csharp"><code class="language-csharp"><span class="token class-name"><span class="token keyword">var</span></span> baseUrl <span class="token operator">=</span> <span class="token string">"https://user:password@www.contoso.com:80"</span><span class="token punctuation">;</span>
+<span class="token comment">// var baseUrl = "https://user:password@www.contoso.com:80/v2/v1";</span>
+<span class="token comment">// var baseUrl = "https://user:password@www.contoso.com:80/v2";</span>
+<span class="token class-name"><span class="token keyword">var</span></span> path <span class="token operator">=</span> <span class="token string">"xxxxx?a=q&amp;b=p"</span><span class="token punctuation">;</span>
+<span class="token comment">// var path = "/xxxxx?a=q&amp;b=p";</span>
+<span class="token class-name"><span class="token keyword">var</span></span> baseUri <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">Uri</span><span class="token punctuation">(</span>baseUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name"><span class="token keyword">var</span></span> uri <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">Uri</span><span class="token punctuation">(</span>baseUri<span class="token punctuation">,</span> path<span class="token punctuation">)</span><span class="token punctuation">;</span>
+Console<span class="token punctuation">.</span><span class="token function">WriteLine</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">$"AbsolutePath: </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token expression language-csharp">uri<span class="token punctuation">.</span>AbsolutePath</span><span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Console<span class="token punctuation">.</span><span class="token function">WriteLine</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">$"AbsoluteUri: </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token expression language-csharp">uri<span class="token punctuation">.</span>AbsoluteUri</span><span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>控制台输出：</p>
+<p>AbsolutePath: &#x2F;xxxxx</p>
+<p>AbsoluteUri: <a target="_blank" rel="noopener" href="https://user:password@www.contoso.com:80/xxxxx?a=q&amp;b=p">https://user:password@www.contoso.com:80/xxxxx?a=q&amp;b=p</a></p>
+</blockquote>
+<p>以下为<code>Uri</code>合并源码：</p>
+<pre class="line-numbers language-csharp" data-language="csharp"><code class="language-csharp"><span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token return-type class-name"><span class="token keyword">string</span></span> <span class="token function">CombineUri</span><span class="token punctuation">(</span><span class="token class-name">Uri</span> basePart<span class="token punctuation">,</span> <span class="token class-name"><span class="token keyword">string</span></span> relativePart<span class="token punctuation">,</span> <span class="token class-name">UriFormat</span> uriFormat<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token comment">//NB: relativePart is ensured as not empty by the caller</span>
+    <span class="token comment">//    Another assumption is that basePart is an AbsoluteUri</span>
+
+    <span class="token comment">// This method was not optimized for efficiency</span>
+    <span class="token comment">// Means a relative Uri ctor may be relatively slow plus it increases the footprint of the baseUri</span>
+
+    <span class="token class-name"><span class="token keyword">char</span></span> c1 <span class="token operator">=</span> relativePart<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token comment">//check a special case for the base as DOS path and a rooted relative string</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>IsDosPath <span class="token operator">&amp;&amp;</span>
+        <span class="token punctuation">(</span>c1 <span class="token operator">==</span> <span class="token char">'/'</span> <span class="token operator">||</span> c1 <span class="token operator">==</span> <span class="token char">'\\'</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
+        <span class="token punctuation">(</span>relativePart<span class="token punctuation">.</span>Length <span class="token operator">==</span> <span class="token number">1</span> <span class="token operator">||</span> <span class="token punctuation">(</span>relativePart<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token char">'/'</span> <span class="token operator">&amp;&amp;</span> relativePart<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token char">'\\'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token comment">// take relative part appended to the base string after the drive letter</span>
+        <span class="token class-name"><span class="token keyword">int</span></span> idx <span class="token operator">=</span> basePart<span class="token punctuation">.</span>OriginalString<span class="token punctuation">.</span><span class="token function">IndexOf</span><span class="token punctuation">(</span><span class="token char">':'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>IsImplicitFile<span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token keyword">string</span><span class="token punctuation">.</span><span class="token function">Concat</span><span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>OriginalString<span class="token punctuation">.</span><span class="token function">AsSpan</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> idx <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> relativePart<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+        <span class="token comment">// The basePart has explicit scheme (could be not file:), take the DOS drive ':' position</span>
+        idx <span class="token operator">=</span> basePart<span class="token punctuation">.</span>OriginalString<span class="token punctuation">.</span><span class="token function">IndexOf</span><span class="token punctuation">(</span><span class="token char">':'</span><span class="token punctuation">,</span> idx <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token keyword">string</span><span class="token punctuation">.</span><span class="token function">Concat</span><span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>OriginalString<span class="token punctuation">.</span><span class="token function">AsSpan</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> idx <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> relativePart<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// Check special case for Unc or absolute path in relativePart when base is FILE</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">StaticIsFile</span><span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>Syntax<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>c1 <span class="token operator">==</span> <span class="token char">'\\'</span> <span class="token operator">||</span> c1 <span class="token operator">==</span> <span class="token char">'/'</span><span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>relativePart<span class="token punctuation">.</span>Length <span class="token operator">>=</span> <span class="token number">2</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>relativePart<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token char">'\\'</span> <span class="token operator">||</span> relativePart<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token char">'/'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+                <span class="token comment">//Assuming relative is a Unc path and base is a file uri.</span>
+                <span class="token keyword">return</span> <span class="token class-name">basePart<span class="token punctuation">.</span>IsImplicitFile <span class="token punctuation">?</span></span> relativePart <span class="token punctuation">:</span> <span class="token string">"file:"</span> <span class="token operator">+</span> relativePart<span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+
+            <span class="token comment">// here we got an absolute path in relativePart,</span>
+            <span class="token comment">// For compatibility with V1.0 parser we restrict the compression scope to Unc Share, i.e. \\host\share\</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>IsUnc<span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+                <span class="token class-name">ReadOnlySpan<span class="token punctuation">&lt;</span><span class="token keyword">char</span><span class="token punctuation">></span></span> share <span class="token operator">=</span> basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>Path <span class="token operator">|</span> UriComponents<span class="token punctuation">.</span>KeepDelimiter<span class="token punctuation">,</span> UriFormat<span class="token punctuation">.</span>Unescaped<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name"><span class="token keyword">int</span></span> i <span class="token operator">=</span> share<span class="token punctuation">.</span><span class="token function">Slice</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">IndexOf</span><span class="token punctuation">(</span><span class="token char">'/'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+                <span class="token punctuation">&#123;</span>
+                    share <span class="token operator">=</span> share<span class="token punctuation">.</span><span class="token function">Slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span>
+
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>IsImplicitFile<span class="token punctuation">)</span>
+                <span class="token punctuation">&#123;</span>
+                    <span class="token keyword">return</span> <span class="token keyword">string</span><span class="token punctuation">.</span><span class="token function">Concat</span><span class="token punctuation">(</span><span class="token string">@"\\"</span><span class="token punctuation">,</span> basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>Host<span class="token punctuation">,</span> UriFormat<span class="token punctuation">.</span>Unescaped<span class="token punctuation">)</span><span class="token punctuation">,</span> share<span class="token punctuation">,</span> relativePart<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span>
+
+                <span class="token keyword">return</span> <span class="token keyword">string</span><span class="token punctuation">.</span><span class="token function">Concat</span><span class="token punctuation">(</span><span class="token string">"file://"</span><span class="token punctuation">,</span> basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>Host<span class="token punctuation">,</span> uriFormat<span class="token punctuation">)</span><span class="token punctuation">,</span> share<span class="token punctuation">,</span> relativePart<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token comment">// It's not obvious but we've checked (for this relativePart format) that baseUti is nor UNC nor DOS path</span>
+            <span class="token comment">//</span>
+            <span class="token comment">// Means base is a Unix style path and, btw, IsImplicitFile cannot be the case either</span>
+            <span class="token keyword">return</span> <span class="token string">"file://"</span> <span class="token operator">+</span> relativePart<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// If we are here we did not recognize absolute DOS/UNC path for a file: base uri</span>
+    <span class="token comment">// Note that DOS path may still happen in the relativePart and if so it may override the base uri scheme.</span>
+
+    <span class="token class-name"><span class="token keyword">bool</span></span> convBackSlashes <span class="token operator">=</span> basePart<span class="token punctuation">.</span>Syntax<span class="token punctuation">.</span><span class="token function">InFact</span><span class="token punctuation">(</span>UriSyntaxFlags<span class="token punctuation">.</span>ConvertPathSlashes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token class-name"><span class="token keyword">string</span><span class="token punctuation">?</span></span> left<span class="token punctuation">;</span>
+
+    <span class="token comment">// check for network or local absolute path</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>c1 <span class="token operator">==</span> <span class="token char">'/'</span> <span class="token operator">||</span> <span class="token punctuation">(</span>c1 <span class="token operator">==</span> <span class="token char">'\\'</span> <span class="token operator">&amp;&amp;</span> convBackSlashes<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>relativePart<span class="token punctuation">.</span>Length <span class="token operator">>=</span> <span class="token number">2</span> <span class="token operator">&amp;&amp;</span> relativePart<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token char">'/'</span><span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token comment">// got an authority in relative path and the base scheme is not file (checked)</span>
+            <span class="token keyword">return</span> basePart<span class="token punctuation">.</span>Scheme <span class="token operator">+</span> <span class="token char">':'</span> <span class="token operator">+</span> relativePart<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+        <span class="token comment">// Got absolute relative path, and the base is not FILE nor a DOS path (checked at the method start)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>HostType <span class="token operator">==</span> Flags<span class="token punctuation">.</span>IPv6HostType<span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            left <span class="token operator">=</span> <span class="token interpolation-string"><span class="token string">$"</span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token expression language-csharp">basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>Scheme <span class="token operator">|</span> UriComponents<span class="token punctuation">.</span>UserInfo<span class="token punctuation">,</span> uriFormat<span class="token punctuation">)</span></span><span class="token punctuation">&#125;</span></span><span class="token string">[</span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token expression language-csharp">basePart<span class="token punctuation">.</span>DnsSafeHost</span><span class="token punctuation">&#125;</span></span><span class="token string">]</span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token expression language-csharp">basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>KeepDelimiter <span class="token operator">|</span> UriComponents<span class="token punctuation">.</span>Port<span class="token punctuation">,</span> uriFormat<span class="token punctuation">)</span></span><span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">else</span>
+        <span class="token punctuation">&#123;</span>
+            left <span class="token operator">=</span> basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>SchemeAndServer <span class="token operator">|</span> UriComponents<span class="token punctuation">.</span>UserInfo<span class="token punctuation">,</span> uriFormat<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+        <span class="token keyword">return</span> convBackSlashes <span class="token operator">&amp;&amp;</span> c1 <span class="token operator">==</span> <span class="token char">'\\'</span> <span class="token punctuation">?</span>
+            <span class="token keyword">string</span><span class="token punctuation">.</span><span class="token function">Concat</span><span class="token punctuation">(</span>left<span class="token punctuation">,</span> <span class="token string">"/"</span><span class="token punctuation">,</span> relativePart<span class="token punctuation">.</span><span class="token function">AsSpan</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">:</span>
+            left <span class="token operator">+</span> relativePart<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// Here we got a relative path</span>
+    <span class="token comment">// Need to run path Compression because this is how relative Uri combining works</span>
+
+    <span class="token comment">// Take the base part path up to and including the last slash</span>
+    left <span class="token operator">=</span> basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>Path <span class="token operator">|</span> UriComponents<span class="token punctuation">.</span>KeepDelimiter<span class="token punctuation">,</span>
+        basePart<span class="token punctuation">.</span>IsImplicitFile <span class="token punctuation">?</span> UriFormat<span class="token punctuation">.</span>Unescaped <span class="token punctuation">:</span> uriFormat<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name"><span class="token keyword">int</span></span> length <span class="token operator">=</span> left<span class="token punctuation">.</span>Length<span class="token punctuation">;</span>
+    <span class="token class-name"><span class="token keyword">char</span><span class="token punctuation">[</span><span class="token punctuation">]</span></span> path <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name"><span class="token keyword">char</span></span><span class="token punctuation">[</span>length <span class="token operator">+</span> relativePart<span class="token punctuation">.</span>Length<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>length <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        left<span class="token punctuation">.</span><span class="token function">CopyTo</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> path<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span>length <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>path<span class="token punctuation">[</span><span class="token operator">--</span>length<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token char">'/'</span><span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+                <span class="token operator">++</span>length<span class="token punctuation">;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">//Append relative path to the result</span>
+    relativePart<span class="token punctuation">.</span><span class="token function">CopyTo</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> path<span class="token punctuation">,</span> length<span class="token punctuation">,</span> relativePart<span class="token punctuation">.</span>Length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Split relative on path and extra (for compression)</span>
+    c1 <span class="token operator">=</span> basePart<span class="token punctuation">.</span>Syntax<span class="token punctuation">.</span><span class="token function">InFact</span><span class="token punctuation">(</span>UriSyntaxFlags<span class="token punctuation">.</span>MayHaveQuery<span class="token punctuation">)</span> <span class="token punctuation">?</span> <span class="token char">'?'</span> <span class="token punctuation">:</span> c_DummyChar<span class="token punctuation">;</span>
+
+    <span class="token comment">// The  implicit file check is to avoid a fragment in the implicit file combined uri.</span>
+    <span class="token class-name"><span class="token keyword">char</span></span> c2 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">!</span>basePart<span class="token punctuation">.</span>IsImplicitFile <span class="token operator">&amp;&amp;</span> basePart<span class="token punctuation">.</span>Syntax<span class="token punctuation">.</span><span class="token function">InFact</span><span class="token punctuation">(</span>UriSyntaxFlags<span class="token punctuation">.</span>MayHaveFragment<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">?</span> <span class="token char">'#'</span> <span class="token punctuation">:</span>
+        c_DummyChar<span class="token punctuation">;</span>
+    <span class="token class-name">ReadOnlySpan<span class="token punctuation">&lt;</span><span class="token keyword">char</span><span class="token punctuation">></span></span> extra <span class="token operator">=</span> <span class="token keyword">string</span><span class="token punctuation">.</span>Empty<span class="token punctuation">;</span>
+
+    <span class="token comment">// assuming c_DummyChar may not happen in an unicode uri string</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>c1 <span class="token operator">==</span> c_DummyChar <span class="token operator">&amp;&amp;</span> c2 <span class="token operator">==</span> c_DummyChar<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token class-name"><span class="token keyword">int</span></span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> relativePart<span class="token punctuation">.</span>Length<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>path<span class="token punctuation">[</span>length <span class="token operator">+</span> i<span class="token punctuation">]</span> <span class="token operator">==</span> c1 <span class="token operator">||</span> path<span class="token punctuation">[</span>length <span class="token operator">+</span> i<span class="token punctuation">]</span> <span class="token operator">==</span> c2<span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            extra <span class="token operator">=</span> relativePart<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">&lt;</span> relativePart<span class="token punctuation">.</span>Length<span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            extra <span class="token operator">=</span> relativePart<span class="token punctuation">.</span><span class="token function">AsSpan</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        length <span class="token operator">+=</span> i<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">else</span>
+    <span class="token punctuation">&#123;</span>
+        length <span class="token operator">+=</span> relativePart<span class="token punctuation">.</span>Length<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// Take the base part up to the path</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>HostType <span class="token operator">==</span> Flags<span class="token punctuation">.</span>IPv6HostType<span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>IsImplicitFile<span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            left <span class="token operator">=</span> <span class="token string">@"\\["</span> <span class="token operator">+</span> basePart<span class="token punctuation">.</span>DnsSafeHost <span class="token operator">+</span> <span class="token char">']'</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">else</span>
+        <span class="token punctuation">&#123;</span>
+            left <span class="token operator">=</span> basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>Scheme <span class="token operator">|</span> UriComponents<span class="token punctuation">.</span>UserInfo<span class="token punctuation">,</span> uriFormat<span class="token punctuation">)</span>
+                    <span class="token operator">+</span> <span class="token char">'['</span> <span class="token operator">+</span> basePart<span class="token punctuation">.</span>DnsSafeHost <span class="token operator">+</span> <span class="token char">']'</span>
+                    <span class="token operator">+</span> basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>KeepDelimiter <span class="token operator">|</span> UriComponents<span class="token punctuation">.</span>Port<span class="token punctuation">,</span> uriFormat<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">else</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>IsImplicitFile<span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>basePart<span class="token punctuation">.</span>IsDosPath<span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+                <span class="token comment">// The FILE DOS path comes as /c:/path, we have to exclude first 3 chars from compression</span>
+                <span class="token function">Compress</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token keyword">ref</span> length<span class="token punctuation">,</span> basePart<span class="token punctuation">.</span>Syntax<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> <span class="token keyword">string</span><span class="token punctuation">.</span><span class="token function">Concat</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">AsSpan</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> extra<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>OperatingSystem<span class="token punctuation">.</span><span class="token function">IsWindows</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> basePart<span class="token punctuation">.</span>IsUnixPath<span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+                left <span class="token operator">=</span> basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>Host<span class="token punctuation">,</span> UriFormat<span class="token punctuation">.</span>Unescaped<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token keyword">else</span>
+            <span class="token punctuation">&#123;</span>
+                left <span class="token operator">=</span> <span class="token string">@"\\"</span> <span class="token operator">+</span> basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>Host<span class="token punctuation">,</span> UriFormat<span class="token punctuation">.</span>Unescaped<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">else</span>
+        <span class="token punctuation">&#123;</span>
+            left <span class="token operator">=</span> basePart<span class="token punctuation">.</span><span class="token function">GetParts</span><span class="token punctuation">(</span>UriComponents<span class="token punctuation">.</span>SchemeAndServer <span class="token operator">|</span> UriComponents<span class="token punctuation">.</span>UserInfo<span class="token punctuation">,</span> uriFormat<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">//compress the path</span>
+    <span class="token function">Compress</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span> basePart<span class="token punctuation">.</span>SecuredPathIndex<span class="token punctuation">,</span> <span class="token keyword">ref</span> length<span class="token punctuation">,</span> basePart<span class="token punctuation">.</span>Syntax<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">string</span><span class="token punctuation">.</span><span class="token function">Concat</span><span class="token punctuation">(</span>left<span class="token punctuation">,</span> path<span class="token punctuation">.</span><span class="token function">AsSpan</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> length<span class="token punctuation">)</span><span class="token punctuation">,</span> extra<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://source.dot.net/#System.Private.Uri/System/Uri.cs,04da67e14624f9b6">System.Uri源码</a></p>
+</blockquote>
+
+  </div>
+  <div>
+  
+  <div class="post-note note-warning copyright" style="margin-top: 42px">
+    <p><span style="font-weight: bold;">作者：</span><a target="_blank" rel="nofollow noopener noreferrer" href="https://huangqingyun.github.io/about">Qingyun Huang</a></p>
+    <p><span style="font-weight: bold;">文章链接：</span><a target="_blank" rel="nofollow noopener noreferrer" href="https://huangqingyun.github.io/2022/09/14/dotnet/httpclient/">https://huangqingyun.github.io/2022/09/14/dotnet/httpclient/</a></p>
+    <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
+  </div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>目录</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HttpClient"><span class="toc-text">HttpClient</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%87%86%E5%88%99"><span class="toc-text">使用准则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Get%E8%AF%B7%E6%B1%82"><span class="toc-text">Get请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Post%E8%AF%B7%E6%B1%82"><span class="toc-text">Post请求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x2F-x-www-form-urlencoded"><span class="toc-text">application&#x2F;x-www-form-urlencoded</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#FormUrlEncodedContent%E7%A4%BA%E4%BE%8B"><span class="toc-text">FormUrlEncodedContent示例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipart-x2F-form-data"><span class="toc-text">multipart&#x2F;form-data</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#HttpMultipartFormDataContent%E7%A4%BA%E4%BE%8B"><span class="toc-text">HttpMultipartFormDataContent示例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x2F-json"><span class="toc-text">application&#x2F;json</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#JsonContent%E7%A4%BA%E4%BE%8B"><span class="toc-text">JsonContent示例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text-x2F-xml"><span class="toc-text">text&#x2F;xml</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Url%E6%8B%BC%E6%8E%A5%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">Url拼接注意事项</span></a></li></ol></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/img/Kaze.png" class="author-img">
+
+<p class="author-name">Qingyun Huang</p>
+<p class="author-description">designed by theme-kaze</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>1</span>
+    <span>文章</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>0</span>
+    <span>分类</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>3</span>
+    <span>标签</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>目录</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HttpClient"><span class="toc-text">HttpClient</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%87%86%E5%88%99"><span class="toc-text">使用准则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Get%E8%AF%B7%E6%B1%82"><span class="toc-text">Get请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Post%E8%AF%B7%E6%B1%82"><span class="toc-text">Post请求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x2F-x-www-form-urlencoded"><span class="toc-text">application&#x2F;x-www-form-urlencoded</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#FormUrlEncodedContent%E7%A4%BA%E4%BE%8B"><span class="toc-text">FormUrlEncodedContent示例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipart-x2F-form-data"><span class="toc-text">multipart&#x2F;form-data</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#HttpMultipartFormDataContent%E7%A4%BA%E4%BE%8B"><span class="toc-text">HttpMultipartFormDataContent示例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x2F-json"><span class="toc-text">application&#x2F;json</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#JsonContent%E7%A4%BA%E4%BE%8B"><span class="toc-text">JsonContent示例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text-x2F-xml"><span class="toc-text">text&#x2F;xml</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Url%E6%8B%BC%E6%8E%A5%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">Url拼接注意事项</span></a></li></ol></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>分类</div>
+  <div class="categories-list">
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>热门标签</div>
+  <div class="tags-list">
+    
+    <a href="\tags\HttpClient" title="HttpClient"><div class="tags-list-item">HttpClient</div></a>
+    
+    <a href="\tags\C#" title="C#"><div class="tags-list-item">C#</div></a>
+    
+    <a href="\tags\.net" title=".net"><div class="tags-list-item">.net</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>目录</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HttpClient"><span class="toc-text">HttpClient</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%87%86%E5%88%99"><span class="toc-text">使用准则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Get%E8%AF%B7%E6%B1%82"><span class="toc-text">Get请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Post%E8%AF%B7%E6%B1%82"><span class="toc-text">Post请求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x2F-x-www-form-urlencoded"><span class="toc-text">application&#x2F;x-www-form-urlencoded</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#FormUrlEncodedContent%E7%A4%BA%E4%BE%8B"><span class="toc-text">FormUrlEncodedContent示例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipart-x2F-form-data"><span class="toc-text">multipart&#x2F;form-data</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#HttpMultipartFormDataContent%E7%A4%BA%E4%BE%8B"><span class="toc-text">HttpMultipartFormDataContent示例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x2F-json"><span class="toc-text">application&#x2F;json</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#JsonContent%E7%A4%BA%E4%BE%8B"><span class="toc-text">JsonContent示例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text-x2F-xml"><span class="toc-text">text&#x2F;xml</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Url%E6%8B%BC%E6%8E%A5%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">Url拼接注意事项</span></a></li></ol></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>最近文章</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-09-14</div>
+        <a href="/2022/09/14/dotnet/httpclient/"><div class="recent-posts-item-content">HttpClient</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2022
+        </span>
+        <a href="/" class="footer-link">学习笔记 </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>
